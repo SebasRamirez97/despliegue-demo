@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Demo CD y Observabilidad</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; }
+        input, button { padding: 8px; font-size: 16px; }
+        ul { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>🚀 App Demo: Despliegue y Monitoreo</h1>
+    <p id="estado">Conectando con el backend...</p>
+
+    <div>
+        <input type="text" id="txtTarea" placeholder="Nueva tarea...">
+        <button onclick="agregarTarea()">Guardar</button>
+        <button onclick="probarError()" style="background: #ffcccc;">Romper (Test Sentry)</button>
+    </div>
+
+    <ul id="listaTareas"></ul>
+
+    <script>
+        // Cambiarás esta URL por la URL real que te dé Render cuando despliegues el backend
+        const API_URL = "https://tu-backend.onrender.com"; 
+
+        async function cargarTareas() {
+            try {
+                const res = await fetch(`${API_URL}/api/tareas`);
+                const data = await res.json();
+                document.getElementById('estado').innerText = "Conectado exitosamente al backend.";
+                const lista = document.getElementById('listaTareas');
+                lista.innerHTML = "";
+                data.forEach(t => {
+                    const li = document.createElement('li');
+                    li.innerText = t.texto;
+                    lista.appendChild(li);
+                });
+            } catch (e) {
+                document.getElementById('estado').innerText = "Error al conectar con el backend.";
+            }
+        }
+
+        async function agregarTarea() {
+            const texto = document.getElementById('txtTarea').value;
+            if(!texto) return;
+            await fetch(`${API_URL}/api/tareas`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ texto })
+            });
+            document.getElementById('txtTarea').value = "";
+            cargarTareas();
+        }
+
+        async function probarError() {
+            await fetch(`${API_URL}/api/error-test`);
+            alert("¡Error enviado a Sentry!");
+        }
+
+        cargarTareas();
+    </script>
+</body>
+</html>
