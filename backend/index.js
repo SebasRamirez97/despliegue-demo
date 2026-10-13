@@ -4,13 +4,11 @@ const Sentry = require("@sentry/node");
 
 const app = express();
 
-// Inicializar Sentry (puedes poner tu DSN real aquí o dejarlo condicional)
-if (process.env.SENTRY_DSN) {
-  Sentry.init({
-    dsn: process.env.SENTRY_DSN,
-    tracesSampleRate: 1.0,
-  });
-}
+// Inicializar Sentry (puedes poner tu DSN real directamente aquí para asegurar que funcione)
+Sentry.init({
+  dsn: process.env.SENTRY_DSN || "https://735440e96682306b207054e29381972d@o4512251468251136.ingest.us.sentry.io/4512251497283584",
+  tracesSampleRate: 1.0,
+});
 
 app.use(cors());
 app.use(express.json());
