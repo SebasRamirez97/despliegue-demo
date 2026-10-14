@@ -41,6 +41,10 @@ app.get('/api/error-test', (req, res) => {
   throw new Error("¡Este es un error simulado para probar la observabilidad en Sentry!");
 });
 
+app.get("/debug-sentry", function mainHandler(req, res) {
+  throw new Error("My first Sentry error!");
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
